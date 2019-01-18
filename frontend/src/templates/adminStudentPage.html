@@ -1,0 +1,222 @@
+<div role="navigation">
+  <div class="navbar navbar-inverse">
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+      <li><a data-toggle="modal" data-target="#modalCreate"
+                   >Create student</a></li>
+        <li><a ui-sref="adminProfessorPage">Professors</a></li>
+        <li><a ng-click="adminCtrl.logout()">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="container text-center" id="tasksDiv">
+  <h3>Students</h3>
+  <hr>
+    <div ng-if="adminCtrl.errorDelete">
+        <h5 class="color-message-error error-message-place">Error deleting student!</h5>
+    </div>
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered text-left">
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Group</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="item in adminCtrl.students">
+          <td>{{item.userid}}</td>
+          <td>{{item.username}}</td>
+          <td>{{item.password}}</td>
+          <td>{{item.firstname}}</td>
+          <td>{{item.lastname}}</td>
+          <td>{{item.group}}</td>
+          <td><button class="btn glyphicon glyphicon-pencil" data-toggle="modal" data-target="#modalUpdate"
+                      ng-click="adminCtrl.setStudent(item)"></button></td>
+          <td><button class="btn glyphicon glyphicon-trash" ng-click="adminCtrl.deleteStudent(item.userid)"></button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal fade" id="modalCreate" tabindex="-1" role="dialog" aria-labelledby="myModalLabelAdd">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabelAdd">Create student</h4>
+            </div>
+            <div ng-if="adminCtrl.errorCreate">
+                <h5 class="color-message-error error-message-place">{{adminCtrl.errorMessage}}</h5>
+            </div>
+            <form name="adminCtrl.formCreate"  ng-submit="adminCtrl.formCreate.$valid && adminCtrl.createStudent(student)" novalidate>
+                <div class="modal-body">
+                    <div class="row">
+                    <div class="control-label col-md-3">
+                        <label>Username</label>
+                    </div>
+
+                    <div class="col-md-5">
+                    <input type="text" class="form-control input-sm chat-input" name="username"
+                           ng-model='student.username' placeholder="Insert Username" required/>
+                    </div>
+                    </div>
+                    <div class="row col-md-offset-4 error color-message-error" ng-if="adminCtrl.formCreate.$submitted && adminCtrl.formCreate.username.$invalid">
+                        <span>Insert Username</span>
+                    </div>
+                    <br>
+                    <div class="row">
+                    <div class="control-label col-md-3">
+                        <label>Password</label>
+                    </div>
+                    <div class="col-md-5">
+                    <input type="text" class="form-control input-sm chat-input" name="password"
+                           ng-model='student.password' placeholder="Insert Password" required/>
+                    </div>
+                    </div>
+                    <div class="row col-md-offset-4 error color-message-error" ng-if="adminCtrl.formCreate.$submitted && adminCtrl.formCreate.password.$invalid">
+                        <span>Insert Password</span>
+                    </div>
+                    <br>
+                    <div class="row">
+                    <div class="control-label col-md-3">
+                        <label>First name</label>
+                    </div>
+                    <div class="col-md-5">
+                    <input type="text" class="form-control input-sm chat-input" name="firstname"
+                           ng-model='student.firstname' placeholder="Insert first name" required/>
+                    </div>
+                    </div>
+                        <div class="row col-md-offset-4 error color-message-error" ng-if="adminCtrl.formCreate.$submitted && adminCtrl.formCreate.firstname.$invalid">
+                        <span>Insert first name</span>
+                    </div>
+                    <br>
+                    <div class="row">
+                    <div class="control-label col-md-3">
+                        <label>Last name</label>
+                    </div>
+                    <div class="col-md-5">
+                    <input type="text" class="form-control input-sm chat-input" name="lastname"
+                           ng-model='student.lastname' placeholder="Insert last name" required/>
+                    </div>
+                    </div>
+                    <div class="row col-md-offset-4 error color-message-error" ng-if="adminCtrl.formCreate.$submitted && adminCtrl.formCreate.lastname.$invalid">
+                        <span>Insert last name</span>
+                    </div>
+                    <br>
+                    <div class="row">
+                    <div class="control-label col-md-3">
+                        <label>Group</label>
+                    </div>
+                    <div class="col-md-5">
+                    <input type="number" min="0" step="1" class="form-control input-sm chat-input" name="group"
+                           ng-model='student.group' placeholder="Insert group" required/>
+                    </div>
+                    </div>
+                    <div class="row col-md-offset-4 error color-message-error" ng-if="adminCtrl.formCreate.$submitted && adminCtrl.formCreate.group.$invalid">
+                        <span>Insert group</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button  type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalUpdate" tabindex="-1" role="dialog" aria-labelledby="myModalLabelUpdate">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabelUpdate">Update student</h4>
+            </div>
+            <div ng-if="adminCtrl.errorUpdate">
+                <h5 class="color-message-error error-message-place">{{adminCtrl.errorMessage}}</h5>
+            </div>
+            <form name="adminCtrl.formUpdate"  ng-submit="adminCtrl.formUpdate.$valid && adminCtrl.updateStudent()" novalidate>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>Username</label>
+                        </div>
+
+                        <div class="col-md-5">
+                            <input type="text" class="form-control input-sm chat-input" name="username"
+                                   ng-model='adminCtrl.student.username' placeholder="Insert Username" required/>
+                        </div>
+                    </div>
+                    <div class="row col-md-offset-4 error color-message-error" ng-if="adminCtrl.formUpdate.$submitted && adminCtrl.formUpdate.username.$invalid">
+                        <span>Insert Username</span>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>Password</label>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control input-sm chat-input" name="password"
+                                   ng-model='adminCtrl.student.password' placeholder="Insert Password" required/>
+                        </div>
+                    </div>
+                    <div class="row col-md-offset-4 error color-message-error" ng-if="adminCtrl.formUpdate.$submitted && adminCtrl.formUpdate.password.$invalid">
+                        <span>Insert Password</span>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>First name</label>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control input-sm chat-input" name="firstname"
+                                   ng-model='adminCtrl.student.firstname' placeholder="Insert first name" required/>
+                        </div>
+                    </div>
+                    <div class="row col-md-offset-4 error color-message-error" ng-if="adminCtrl.formUpdate.$submitted && adminCtrl.formUpdate.firstname.$invalid">
+                        <span>Insert first name</span>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>Last name</label>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control input-sm chat-input" name="lastname"
+                                   ng-model='adminCtrl.student.lastname' placeholder="Insert last name" required/>
+                        </div>
+                    </div>
+                    <div class="row col-md-offset-4 error color-message-error" ng-if="adminCtrl.formUpdate.$submitted && adminCtrl.formUpdate.lastname.$invalid">
+                        <span>Insert last name</span>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>Group</label>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="number" min="0" step="1" class="form-control input-sm chat-input" name="group"
+                                   ng-model='adminCtrl.student.group' placeholder="Insert group" required/>
+                        </div>
+                    </div>
+                    <div class="row col-md-offset-4 error color-message-error" ng-if="adminCtrl.formUpdate.$submitted && adminCtrl.formUpdate.group.$invalid">
+                        <span>Insert group</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button  type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,133 @@
+<div role="navigation">
+    <div class="navbar navbar-inverse">
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a ui-sref="professorPage">Back</a></li>
+                <li><a data-toggle="modal" data-target="#modalCreate"
+                >Create announcement</a></li>
+                <li><a ng-click="announcementCtrl.logout()">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container text-center" id="tasksDiv">
+    <h3>Announcements</h3>
+    <hr>
+    <div ng-if="announcementCtrl.errorDelete">
+        <h5 class="color-message-error error-message-place">Error deleting announcement!</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered text-left">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in announcementCtrl.announcements">
+                <td>{{item.title}}</td>
+                <td>{{item.description}}</td>
+                <td><button class="btn glyphicon glyphicon-pencil" data-toggle="modal" data-target="#modalUpdate"
+                            ng-click="announcementCtrl.setAnnouncement(item)"></button></td>
+                <td><button class="btn glyphicon glyphicon-trash" ng-click="announcementCtrl.deleteAnnouncement(item.announcementId)"></button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="modalCreate" tabindex="-1" role="dialog" aria-labelledby="myModalLabelAdd">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabelAdd">Create announcement</h4>
+            </div>
+            <div ng-if="announcementCtrl.errorCreate">
+                <h5 class="color-message-error error-message-place">{{announcementCtrl.errorMessage}}</h5>
+            </div>
+            <form name="announcementCtrl.formCreate"  ng-submit="announcementCtrl.formCreate.$valid && announcementCtrl.createAnnouncement(announcement)" novalidate>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>Title</label>
+                        </div>
+
+                        <div class="col-md-5">
+                            <input type="text" class="form-control input-sm chat-input" name="title"
+                                   ng-model='announcement.title' placeholder="Insert title" required/>
+                        </div>
+                    </div>
+                    <div class="row col-md-offset-4 error color-message-error" ng-if="announcementCtrl.formCreate.$submitted && announcementCtrl.formCreate.title.$invalid">
+                        <span>Insert title</span>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>Description</label>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control input-sm chat-input" name="description"
+                                   ng-model='announcement.description' placeholder="Insert description" required/>
+                        </div>
+                    </div>
+                    <div class="row col-md-offset-4 error color-message-error" ng-if="announcementCtrl.formCreate.$submitted && announcementCtrl.formCreate.description.$invalid">
+                        <span>Insert description</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button  type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalUpdate" tabindex="-1" role="dialog" aria-labelledby="myModalLabelUpdate">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabelUpdate">Update announcement</h4>
+            </div>
+            <div ng-if="announcementCtrl.errorUpdate">
+                <h5 class="color-message-error error-message-place">{{announcementCtrl.errorMessage}}</h5>
+            </div>
+            <form name="announcementCtrl.formUpdate"  ng-submit="announcementCtrl.formUpdate.$valid && announcementCtrl.updateAnnouncement()" novalidate>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>Title</label>
+                        </div>
+
+                        <div class="col-md-5">
+                            <input type="text" class="form-control input-sm chat-input" name="title"
+                                   ng-model='announcementCtrl.announcement.title' readonly/>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>Description</label>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control input-sm chat-input" name="description"
+                                   ng-model='announcementCtrl.announcement.description' placeholder="Insert description" required/>
+                        </div>
+                    </div>
+                    <div class="row col-md-offset-4 error color-message-error" ng-if="announcementCtrl.formUpdate.$submitted && announcementCtrl.formUpdate.description.$invalid">
+                        <span>Insert description</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button  type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+

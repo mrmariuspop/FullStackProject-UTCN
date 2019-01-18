@@ -1,0 +1,167 @@
+<div role="navigation">
+    <div class="navbar navbar-inverse">
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a ui-sref="professorPage">Back</a></li>
+                <li><a data-toggle="modal" data-target="#modalCreate"
+                >Add student</a></li>
+                <li><a data-toggle="modal" data-target="#modalChart"  ng-click="studentsExamCtrl.generateChart()"
+                >Chart</a></li>
+                <li><a ng-click="studentsExamCtrl.logout()">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container text-center" id="tasksDiv">
+    <h3>Students</h3>
+    <hr>
+    <div ng-if="studentsExamCtrl.errorDelete">
+        <h5 class="color-message-error error-message-place">Error deleting student from exam!</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered text-left">
+            <thead>
+            <tr>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Group</th>
+                <th>Grade</th>
+                <th>Update grade</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in studentsExamCtrl.students">
+                <td>{{item.user.firstname}}</td>
+                <td>{{item.user.lastname}}</td>
+                <td>{{item.user.group}}</td>
+                <td ng-if="item.grade==0">Not graded</td>
+                <td ng-if="item.grade!=0">{{item.grade}}</td>
+                <td><button class="btn glyphicon glyphicon-pencil" data-toggle="modal" data-target="#modalUpdate"
+                            ng-click="studentsExamCtrl.setStudentExam(item)"></button></td>
+                <td><button class="btn glyphicon glyphicon-trash" ng-click="studentsExamCtrl.deleteStudentFromExam(item.id)"></button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="modalCreate" tabindex="-1" role="dialog" aria-labelledby="myModalLabelAdd">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabelAdd">Add student to exam</h4>
+            </div>
+            <div ng-if="studentsExamCtrl.errorCreate">
+                <h5 class="color-message-error error-message-place">{{studentsExamCtrl.errorMessage}}</h5>
+            </div>
+            <br>
+            <div class="table-responsive add-margins-table">
+                <table class="table table-striped table-bordered text-left">
+                    <thead>
+                    <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Group</th>
+                        <th>Add</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in studentsExamCtrl.studentsNotAttendExam">
+                        <td>{{item.firstname}}</td>
+                        <td>{{item.lastname}}</td>
+                        <td>{{item.group}}</td>
+                        <td><button class="btn glyphicon glyphicon-plus"
+                                    ng-click="studentsExamCtrl.addStudent(item)"></button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalUpdate" tabindex="-1" role="dialog" aria-labelledby="myModalLabelUpdate">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabelUpdate">Update grade</h4>
+            </div>
+            <div ng-if="studentsExamCtrl.errorUpdate">
+                <h5 class="color-message-error error-message-place">{{studentsExamCtrl.errorMessage}}</h5>
+            </div>
+            <form name="studentsExamCtrl.formUpdate"  ng-submit="studentsExamCtrl.formUpdate.$valid && studentsExamCtrl.updateStudentGrade()" novalidate>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>First name</label>
+                        </div>
+
+                        <div class="col-md-5">
+                            <input type="text" class="form-control input-sm chat-input" name="firstname"
+                                   ng-model='studentsExamCtrl.studentExam.user.firstname' readonly/>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>Last name</label>
+                        </div>
+
+                        <div class="col-md-5">
+                            <input type="text" class="form-control input-sm chat-input" name="lastname"
+                                   ng-model='studentsExamCtrl.studentExam.user.lastname' readonly/>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>Group</label>
+                        </div>
+
+                        <div class="col-md-5">
+                            <input type="text" class="form-control input-sm chat-input" name="group"
+                                   ng-model='studentsExamCtrl.studentExam.user.group' readonly/>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>Grade</label>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="number" min="1" max="10" class="form-control input-sm chat-input" name="grade"
+                                   ng-model='studentsExamCtrl.studentExam.grade' placeholder="Insert grade" required/>
+                        </div>
+                    </div>
+                    <div class="row col-md-offset-3 error color-message-error" ng-if="studentsExamCtrl.formUpdate.$submitted && studentsExamCtrl.formUpdate.grade.$invalid">
+                        <span>Insert grade between 1 and 10</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button  type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalChart" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <canvas id="line-chart"></canvas>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,140 @@
+<div role="navigation">
+    <div class="navbar navbar-inverse">
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a ui-sref="adminStudentPage">Back</a></li>
+                <li><a data-toggle="modal" data-target="#modalCreate"
+                >Create professor</a></li>
+                <li><a ng-click="adminProfessorCtrl.logout()">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container text-center" id="tasksDiv">
+    <h3>Professors</h3>
+    <hr>
+    <div ng-if="adminProfessorCtrl.errorDelete">
+        <h5 class="color-message-error error-message-place">Error deleting professor!</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered text-left">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in adminProfessorCtrl.professors">
+                <td>{{item.userid}}</td>
+                <td>{{item.username}}</td>
+                <td>{{item.password}}</td>
+                <td><button class="btn glyphicon glyphicon-pencil" data-toggle="modal" data-target="#modalUpdate"
+                            ng-click="adminProfessorCtrl.setProfessor(item)"></button></td>
+                <td><button class="btn glyphicon glyphicon-trash" ng-click="adminProfessorCtrl.deleteProfessor(item.userid)"></button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="modalCreate" tabindex="-1" role="dialog" aria-labelledby="myModalLabelAdd">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabelAdd">Create professor</h4>
+            </div>
+            <div ng-if="adminProfessorCtrl.errorCreate">
+                <h5 class="color-message-error error-message-place">{{adminProfessorCtrl.errorMessage}}</h5>
+            </div>
+            <form name="adminProfessorCtrl.formCreate"  ng-submit="adminProfessorCtrl.formCreate.$valid && adminProfessorCtrl.createProfessor(professor)" novalidate>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>Username</label>
+                        </div>
+
+                        <div class="col-md-5">
+                            <input type="text" class="form-control input-sm chat-input" name="username"
+                                   ng-model='professor.username' placeholder="Insert Username" required/>
+                        </div>
+                    </div>
+                    <div class="row col-md-offset-4 error color-message-error" ng-if="adminProfessorCtrl.formCreate.$submitted && adminProfessorCtrl.formCreate.username.$invalid">
+                        <span>Insert Username</span>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>Password</label>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control input-sm chat-input" name="password"
+                                   ng-model='professor.password' placeholder="Insert Password" required/>
+                        </div>
+                    </div>
+                    <div class="row col-md-offset-4 error color-message-error" ng-if="adminProfessorCtrl.formCreate.$submitted && adminProfessorCtrl.formCreate.password.$invalid">
+                        <span>Insert Password</span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button  type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalUpdate" tabindex="-1" role="dialog" aria-labelledby="myModalLabelUpdate">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabelUpdate">Update professor</h4>
+            </div>
+            <div ng-if="adminProfessorCtrl.errorUpdate">
+                <h5 class="color-message-error error-message-place">{{adminProfessorCtrl.errorMessage}}</h5>
+            </div>
+            <form name="adminProfessorCtrl.formUpdate"  ng-submit="adminProfessorCtrl.formUpdate.$valid && adminProfessorCtrl.updateProfessor()" novalidate>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>Username</label>
+                        </div>
+
+                        <div class="col-md-5">
+                            <input type="text" class="form-control input-sm chat-input" name="username"
+                                   ng-model='adminProfessorCtrl.professor.username' placeholder="Insert Username" required/>
+                        </div>
+                    </div>
+                    <div class="row col-md-offset-4 error color-message-error" ng-if="adminProfessorCtrl.formUpdate.$submitted && adminProfessorCtrl.formUpdate.username.$invalid">
+                        <span>Insert Username</span>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="control-label col-md-3">
+                            <label>Password</label>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control input-sm chat-input" name="password"
+                                   ng-model='adminProfessorCtrl.professor.password' placeholder="Insert Password" required/>
+                        </div>
+                    </div>
+                    <div class="row col-md-offset-4 error color-message-error" ng-if="adminProfessorCtrl.formUpdate.$submitted && adminProfessorCtrl.formUpdate.password.$invalid">
+                        <span>Insert Password</span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button  type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
